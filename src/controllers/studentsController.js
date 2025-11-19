@@ -1,126 +1,138 @@
-import Student from '../models/Student.js'
+import Student from "../models/Student.js";
 
-export async function addStudent (req, res) {
+export async function addStudent(req, res) {
   try {
-    console.log(req.body)
+    console.log(req.body);
 
-    const result = await Student.create(req.body)
+    const result = await Student.create(req.body);
     // console.log(result)
     // res
     //   .status(201)
     //   .json({ message: 'Student added successfully', student: result })
 
-    res.redirect('/students')
+    res.redirect("/students");
   } catch (error) {
-    res.status(400).send(error.message)
+    res.status(400).send(error.message);
   }
 }
 
-export async function getStudents (req, res) {
+export async function getStudents(req, res) {
   try {
-    const students = await Student.find()
+    const students = await Student.find();
     // res.json(students)
-    res.render('index', { students })
+    res.render("index", { students });
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
 }
 
-export async function updateStudent (req, res) {
+export async function updateStudent(req, res) {
   try {
-    const { roll } = req.params
-    const updatedData = req.body
+    const { roll } = req.params;
+    const updatedData = req.body;
     // console.log(req.body);
 
     const result = await Student.findOneAndUpdate(
       { roll },
       { $set: updatedData },
       { new: true, runValidators: true }
-    )
+    );
     if (!result) {
-      return res.status(404).send('Student not found')
+      return res.status(404).send("Student not found");
     }
 
     // res.json(result)
-    res.redirect('/students')
+    res.redirect("/students");
   } catch (error) {
-    res.status(400).send(error.message)
+    res.status(400).send(error.message);
   }
 }
 
-export async function deleteStudent (req, res) {
+export async function deleteStudent(req, res) {
   try {
-    const { roll } = req.params
+    const { roll } = req.params;
 
-    const result = await Student.findOneAndDelete({ roll })
+    const result = await Student.findOneAndDelete({ roll });
 
     if (!result) {
-      return res.status(404).send('Student not found')
+      return res.status(404).send("Student not found");
     }
     // res.json({ message: 'Student Deleted', student: result })
-    res.redirect('/students')
+    res.redirect("/students");
   } catch (error) {
-    res.status(500).send('Failed to delete student')
+    res.status(500).send("Failed to delete student");
   }
 }
 
-export async function getStudentsBySkill (req, res) {
-  // search 1
-  console.log("Hitting getStudentsBySkill");
-  
+// TODO
+export async function getStudentsBySkill(req, res) {
   try {
-    res.render('index', {
+    res.render("index", {
       search: 'Search results for "' + req.query.search + '"',
-      students: []
-    })
+      students: [],
+    });
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
 }
 
-export async function getStudentByRoll (req, res) {
-  // search 2
-  console.log("Hitting getStudentByRoll");
-  
+export async function getStudentByRoll(req, res) {
   try {
-    const { roll } = req.params
-    const student = await Student.findOne({ roll })
+    const { roll } = req.params;
+    const student = await Student.findOne({ roll });
     if (!student) {
       // return res.status(404).send('Student not found')
-      res.render('index', {
+      res.render("index", {
         search: 'Search results for "' + roll + '"',
-        students: []
-      })
-      return
+        students: [],
+      });
+      return;
     }
-    res.render('index', {
+    res.render("index", {
       search: 'Search results for "' + roll + '"',
-      students: [student]
-    })
+      students: [student],
+    });
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
 }
 
-export async function getDayScholars (req, res) {
-  // filter 1
+export async function getDayScholars(req, res) {
+  try {
+    const students = await Student.find({ guardianPhoneNumber: "" });
+
+    res.render("index", {
+      filter: "dayscholars",
+      students,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 }
 
-export async function getHostelers (req, res) {
-  // filter 2
+export async function getHostelers(req, res) {
+  try {
+    const students = await Student.find({ guardianPhoneNumber: { $ne: "" } });
+    res.render("index", {
+      filter: "hostelers",
+      students,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 }
 
-export async function openForm (req, res) {
-  const { roll } = req.params
+export async function openForm(req, res) {
+  const { roll } = req.params;
   if (roll) {
     // Edit form
-    const student = await Student.findOne({ roll })
+    const student = await Student.findOne({ roll });
     if (!student) {
-      return res.status(404).send('Student not found')
+      return res.status(404).send("Student not found");
     }
-    res.render('form', { student })
+    res.render("form", { student });
   } else {
     // Add form
-    res.render('form', { student: null })
+    res.render("form", { student: null });
   }
 }

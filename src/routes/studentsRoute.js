@@ -6,7 +6,9 @@ import {
   updateStudent,
   openForm,
   getStudentsBySkill,
-  getStudentByRoll
+  getStudentByRoll,
+  getDayScholars,
+  getHostelers
 } from '../controllers/studentsController.js'
 
 const studentsRouter = Router()
@@ -20,6 +22,16 @@ studentsRouter.get(
         return getStudentByRoll(req, res)
       }
       return getStudentsBySkill(req, res)
+    }
+    next()
+  },
+  (req, res, next) => {
+    if (req.query.filter) {
+      if (req.query.filter === 'dayscholars') {
+        return getDayScholars(req, res)
+      } else if (req.query.filter === 'hostelers') {
+        return getHostelers(req, res)
+      }
     }
     next()
   },
