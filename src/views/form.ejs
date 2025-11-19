@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+
+    <% if (student) { %>
+    <h2>Update Student</h2>
+    <form action="/students/<%= student.roll %>?_method=PATCH" method="post">
+      <% } else { %>
+      <h2>Add Student</h2>
+      <form action="/students/" method="post">
+      <% } %>
+
+      <label for="roll">Roll Number:</label>
+      <input type="text" id="roll" name="roll" value="<%= student ? student.roll
+      : '' %>" required <%= student ? 'readonly' : '' %>><br /><br />
+
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        value="<%= student ? student.name : '' %>"
+        required
+      /><br /><br />
+
+      <label for="guardianPhoneNumber">Guardian Phone Number:</label>
+      <input
+        type="text"
+        id="guardianPhoneNumber"
+        name="guardianPhoneNumber"
+        value="<%= student ? student.guardianPhoneNumber : '' %>"
+      /><br /><br />
+
+      <% const skillsList = ['dancing', 'drawing', 'painting', 'singing',
+      'story writing', 'playing chess', 'playing cricket', 'playing soccer', 'performing orchestra', 'coding'] %>
+
+      <label for="skills">Skills (select multiple):</label>
+      <select name="skills[]" id="skills" multiple>
+        <% skillsList.forEach(skill => { %>
+          <option value="<%= skill %>" 
+            <%= student && student.skills.includes(skill) ? 'selected' : '' %>>
+            <%= skill.charAt(0).toUpperCase() + skill.slice(1) %>
+          </option>
+        <% }) %>
+      </select>
+      <br /><br />
+
+      <button type="submit"><%= student ? 'Update' : 'Add' %></button>
+    </form>
+    <%- include('partials/footer') %>
+  </body>
+</html>

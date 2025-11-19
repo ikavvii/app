@@ -6,6 +6,44 @@
     <title></title>
   </head>
   <body>
-    <% students.forEach(student => { %> <%= student.roll %> <% }) %>
+    <%- include('partials/header') %>
+
+    <form action="/students" method="get">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by roll or skills..."
+      />
+      <button type="submit">Search</button>
+    </form>
+
+    <% if (typeof search !== 'undefined' ) { %>
+    <h2><%= search %></h2>
+    <% } %> <% if (students.length === 0) { %>
+    <p>No students found.</p>
+    <% } %> <% students.forEach(student => { %>
+    <div>
+      <p><%= student.roll %>&nbsp;<%= student.name %></p>
+      <p>
+        <%= student.guardianPhoneNumber ? "Hosteler, Guardian phone number: " +
+        student.guardianPhoneNumber : 'Day Scholar' %>
+      </p>
+      <p>
+        Skills: <%= student.skills.map(skill => skill.charAt(0).toUpperCase() +
+        skill.slice(1)).join(', ') %>
+      </p>
+
+      <button onclick="location.href='/students/<%= student.roll %>'">
+        Update
+      </button>
+      <form
+        action="/students/<%= student.roll %>?_method=DELETE"
+        method="post"
+        onsubmit="return confirm('Do you really want to delete <%= student.roll %>?')"
+      >
+        <button type="submit">Delete</button>
+      </form>
+    </div>
+    <% }) %> <%- include('partials/footer') %>
   </body>
 </html>
