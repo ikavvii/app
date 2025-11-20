@@ -23,12 +23,13 @@
         onchange="if (this.value) this.form.submit()"
       >
         <option value="" disabled selected>Filter by</option>
-        <option value="dayscholars" >DayScholars</option>
-        <option value="hostelers" >Hostelers</option>
+        <option value="dayscholars">DayScholars</option>
+        <option value="hostelers">Hostelers</option>
       </select>
     </form>
-
-    <% if (typeof search !== 'undefined' ) { %>
+    <% if (typeof filter !== 'undefined' ) { %>
+    <h2><%= filter %></h2>
+    <% } else if (typeof search !== 'undefined' ) { %>
     <h2><%= search %></h2>
     <% } %> <% if (students.length === 0) { %>
     <p>No students found.</p>
@@ -56,7 +57,5 @@
       </form>
     </div>
     <% }) %> <%- include('partials/footer') %>
-
-    
   </body>
 </html>
