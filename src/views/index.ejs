@@ -3,58 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> </title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <title>Students App</title>
   </head>
-  <body>
+  <body class="container py-3">
     <%- include('partials/header') %>
 
-    <form action="/students" method="get">
-      <input
-        type="text"
-        name="search"
-        placeholder="Search by roll or skills..."
-      />
-      <button type="submit">Search</button>
+    <form class="row g-2 mb-3" action="/students" method="get">
+      <div class="col-12 col-md-6">
+        <input
+          type="text"
+          name="search"
+          class="form-control"
+          placeholder="Search by roll or skills..."
+        />
+      </div>
+      <div class="col-12 col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+      </div>
     </form>
-    <form action="/students" method="get">
-      <select
-        name="filter"
-        id="filter"
-        onchange="if (this.value) this.form.submit()"
-      >
-        <option value="" disabled selected>Filter by</option>
-        <option value="dayscholars">DayScholars</option>
-        <option value="hostelers">Hostelers</option>
-      </select>
-    </form>
-    <% if (typeof filter !== 'undefined' ) { %>
-    <h2><%= filter %></h2>
-    <% } else if (typeof search !== 'undefined' ) { %>
-    <h2><%= search %></h2>
-    <% } %> <% if (students.length === 0) { %>
-    <p>No students found.</p>
-    <% } %> <% students.forEach(student => { %>
-    <div>
-      <p><%= student.roll %>&nbsp;<%= student.name %></p>
-      <p>
-        <%= student.guardianPhoneNumber ? "Hosteler, Guardian phone number: " +
-        student.guardianPhoneNumber : 'Day Scholar' %>
-      </p>
-      <p>
-        Skills: <%= student.skills.map(skill => skill.charAt(0).toUpperCase() +
-        skill.slice(1)).join(', ') %>
-      </p>
 
-      <button onclick="location.href='/students/<%= student.roll %>'">
-        Update
-      </button>
-      <form
-        action="/students/<%= student.roll %>?_method=DELETE"
-        method="post"
-        onsubmit="return confirm('Do you really want to delete <%= student.roll %>?')"
-      >
-        <button type="submit">Delete</button>
-      </form>
+    <form class="row mb-3" action="/students" method="get">
+      <div class="col-12 col-md-4">
+        <select
+          name="filter"
+          id="filter"
+          class="form-select"
+          onchange="if(this.value) this.form.submit()"
+        >
+          <option value="" disabled selected>Filter by</option>
+          <option value="dayscholars">DayScholars</option>
+          <option value="hostelers">Hostelers</option>
+        </select>
+      </div>
+    </form>
+
+    <% if (typeof filter !== 'undefined' ) { %>
+    <h2 class="h4"><%= filter %></h2>
+    <% } else if (typeof search !== 'undefined' ) { %>
+    <h2 class="h4"><%= search %></h2>
+    <% } %> <% if (students.length === 0) { %>
+    <p class="alert alert-warning">No students found.</p>
+    <% } %> <% students.forEach(student => { %>
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body">
+        <p class="mb-1 fw-bold"><%= student.roll %>&nbsp;<%= student.name %></p>
+        <p class="mb-1">
+          <%= student.guardianPhoneNumber ? "Hosteler, Guardian phone number: "
+          + student.guardianPhoneNumber : 'Day Scholar' %>
+        </p>
+        <p class="mb-2">
+          Skills: <%= student.skills.map(skill => skill.charAt(0).toUpperCase()
+          + skill.slice(1)).join(', ') %>
+        </p>
+        <div class="d-flex gap-2">
+          <button
+            class="btn btn-outline-info btn-sm"
+            onclick="location.href='/students/<%= student.roll %>'"
+          >
+            Update
+          </button>
+          <form
+            action="/students/<%= student.roll %>?_method=DELETE"
+            method="post"
+            onsubmit="return confirm('Do you really want to delete <%= student.roll %>?')"
+          >
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
     <% }) %> <%- include('partials/footer') %>
   </body>
